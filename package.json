@@ -1,0 +1,32 @@
+{
+  "$schema": "https://www.schemastore.org/package.json",
+  "name": "@mynameistito/agent-directory",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/worker.ts --target browser --outfile dist/index.js",
+    "check": "ultracite check",
+    "deploy": "bunx --no-install alchemy deploy --stage \"$STAGE\" --yes",
+    "destroy": "bunx --no-install alchemy destroy --stage \"$STAGE\" --yes",
+    "dev": "alchemy dev",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "alchemy": "2.0.0-beta.80",
+    "effect": "4.0.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.2",
+    "@types/node": "^26.6.3",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "ultracite": "7.12.0",
+    "vitest": "5.0.2"
+  },
+  "packageManager": "bun@1.4.2"
+}
