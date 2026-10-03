@@ -1,6 +1,7 @@
 pre-commit:
   jobs:
-    - run: bun run fix {staged_files}
+    - run: bun run fix {files}
+      files: git diff --cached --name-only --diff-filter=ACMRTUXB
       glob:
         - "*.js"
         - "**/*.js"
