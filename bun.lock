@@ -5,6 +5,7 @@
     "": {
       "name": "@mynameistito/agent-directory",
       "dependencies": {
+        "@effect/platform-bun": "4.0.0",
         "@modelcontextprotocol/sdk": "^1.26.0",
         "alchemy": "2.0.0-beta.80",
         "effect": "4.0.0",
@@ -95,6 +96,10 @@
     "@distilled.cloud/stripe": ["@distilled.cloud/stripe@1.0.0-rc.13", "", { "dependencies": { "@distilled.cloud/core": "1.0.0-rc.13" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-jLTJ1mg4U39lHZb9EGYBJLR91yB3LSG6fVxix+r1BbqaTovWzE+NuJ7fu9fRSeax9jRAqsGLLxe9IxJbOtwQnQ=="],
 
     "@distilled.cloud/zerossl": ["@distilled.cloud/zerossl@1.0.0-rc.13", "", { "dependencies": { "@distilled.cloud/core": "1.0.0-rc.13" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-dnxhg39lZjpTdZbHCVYPoUC9E2r8eSHbqiYDhSq2EurVPJcc9YRXlxZR1bP1nniSp078XV8GA+aUECt/Z56aQg=="],
+
+    "@effect/platform-bun": ["@effect/platform-bun@4.0.0", "", { "dependencies": { "@effect/platform-node-shared": "^4.0.0" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-g9O41Sub/+JKfLjvBNEoqR1Pg6wtc2bbYzv7Kw8YsMihbt/ypCn7ZoydEXaHvTTUvbVrXOQbVFlfplyo84Clug=="],
+
+    "@effect/platform-node-shared": ["@effect/platform-node-shared@4.0.0", "", { "dependencies": { "@types/ws": "^8.18.1", "ws": "^8.22.0" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-VBXHJU9UXVZPdQGGDRjGXpo+TpOzRwZuMrdKAtIxi1qwcRftmacZ1zTgIrzBa0Z2RA2KVkoOecQUsTlt/nJZhw=="],
 
     "@effect/sql-d1": ["@effect/sql-d1@4.0.0", "", { "dependencies": { "@cloudflare/workers-types": "^5.20260926.1" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-pmkzncZCGD6CLyvc89keEBU85h+gHVCu/LKQnThd+ruYSUbG0R9jYA+lnk3R8Djp0wQW6SbsbmHQuhopIYyo3Q=="],
 
