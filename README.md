@@ -46,9 +46,13 @@ Update `src/domain/catalog.ts` when adding products. Add only interfaces that ex
 
 ## DNS-AID
 
-DNS-AID is currently an Internet-Draft and its index document format is not standardized. The public DNS zone `mynameistito.com` is DNSSEC-signed. The intended organization index name is `_index._agents.mynameistito.com`, pointing to `agents.mynameistito.com`; the deployed service's MCP endpoint is `/mcp`.
+DNS-AID is currently an Internet-Draft and its index document format is not standardized. The public DNS zone `mynameistito.com` is DNSSEC-signed. Once the production Worker is deployed, publish this organization-index entry:
 
-The DNS record is managed in the Cloudflare zone rather than inferred from the catalog. Only publish DNS-AID records after the production service is deployed and publicly reachable. Check the current [DNS-AID draft](https://datatracker.ietf.org/doc/draft-mozleywilliams-dnsop-dnsaid/) and [RFC 9460](https://www.rfc-editor.org/rfc/rfc9460) before changing experimental SVCB parameters. Do not use unregistered SvcParamKeys as if they were standardized.
+```dns
+_index._agents.mynameistito.com. 3600 IN SVCB 1 agents.mynameistito.com. alpn="h2,http/1.1" port=443
+```
+
+This points discovery to the HTTPS organization directory; the MCP endpoint itself is `https://agents.mynameistito.com/mcp`. It advertises only HTTP transports (`h2` and `http/1.1`), not a draft-only `mcp` ALPN identifier or an invented experimental SvcParamKey. The record is managed in the Cloudflare zone, not inferred from the catalog. Publish it only after the production service is deployed and publicly reachable. Check the current [DNS-AID draft](https://datatracker.ietf.org/doc/draft-mozleywilliams-dnsop-dnsaid/) and [RFC 9460](https://www.rfc-editor.org/rfc/rfc9460) before changing experimental SVCB parameters.
 
 ## Development
 
@@ -76,9 +80,9 @@ Preview stages omit the production custom domain. The production stage binds `ag
 
 `.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v3.1.3 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted reusable action.
 
-Configure these repository secrets before deployment:
+Configure this repository variable and secret before deployment:
 
-- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_ACCOUNT_ID` (Actions variable)
 - `CLOUDFLARE_API_TOKEN` — narrowly scoped to the Cloudflare account and required Worker deployment operations.
 
 PR builds receive no Cloudflare credentials. Fork PRs do not receive privileged previews. Scheduled reconciliation cleans up previews whose PR-close event was missed.

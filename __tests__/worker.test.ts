@@ -74,15 +74,45 @@ describe("directory Worker", () => {
         method: "POST",
       })
     );
+    const product = await worker.fetch(
+      new Request("https://agents.example/mcp", {
+        body: JSON.stringify({
+          id: 3,
+          jsonrpc: "2.0",
+          method: "tools/call",
+          params: {
+            arguments: { id: "hcc-bin-day" },
+            name: "get_product",
+          },
+        }),
+        headers: {
+          accept: "application/json, text/event-stream",
+          "content-type": "application/json",
+        },
+        method: "POST",
+      })
+    );
 
     expect(initialization.status).toBe(200);
     expect(tools.status).toBe(200);
+    expect(product.status).toBe(200);
     await expect(tools.json()).resolves.toMatchObject({
       result: {
         tools: [
           { name: "list_products" },
           { name: "get_product" },
           { name: "search_products" },
+        ],
+      },
+    });
+    await expect(product.json()).resolves.toMatchObject({
+      result: {
+        content: [
+          {
+            text: expect.stringContaining(
+              "This product does not currently expose an MCP or A2A endpoint."
+            ),
+          },
         ],
       },
     });
