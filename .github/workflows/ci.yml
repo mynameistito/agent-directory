@@ -9,16 +9,26 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  check:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - typecheck
+          - check
+          - test
+          - build
+          - knip
+    name: ${{ matrix.task }}
     steps:
-      - name: Check out exact commit
+      - name: Checkout exact commit
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
-      - name: Set up Bun
+      - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.4.2
@@ -26,21 +36,17 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Check formatting and lint
-        run: bun run check
-
-      - name: Typecheck
-        run: bun run typecheck
-
-      - name: Test
-        run: bun run test
+      - name: Run task
+        run: bun run ${{ matrix.task }}
 
       - name: Build Worker bundle
+        if: matrix.task == 'build'
         run: |
           mkdir -p "$RUNNER_TEMP/alchemy-worker/worker"
-          bun build src/worker.ts --target browser --outfile "$RUNNER_TEMP/alchemy-worker/worker/index.js"
+          cp dist/index.js "$RUNNER_TEMP/alchemy-worker/worker/index.js"
 
       - name: Upload Worker Preview bundle
+        if: matrix.task == 'build'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 (Node.js 24)
         with:
           name: alchemy-worker
