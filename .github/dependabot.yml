@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - github-actions
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: bun
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - deps
+    cooldown:
+      default-days: 7
