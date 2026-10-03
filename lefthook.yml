@@ -1,0 +1,20 @@
+pre-commit:
+  jobs:
+    - run: bun run fix {files}
+      files: git diff --cached --name-only --diff-filter=ACMRTUXB
+      glob:
+        - "*.js"
+        - "**/*.js"
+        - "*.jsx"
+        - "**/*.jsx"
+        - "*.ts"
+        - "**/*.ts"
+        - "*.tsx"
+        - "**/*.tsx"
+        - "*.json"
+        - "**/*.json"
+        - "*.jsonc"
+        - "**/*.jsonc"
+        - "*.css"
+        - "**/*.css"
+      stage_fixed: true
