@@ -56,7 +56,7 @@ This points discovery to the HTTPS organization directory; the MCP endpoint itse
 
 ## Development
 
-Requires Bun 1.4.2.
+Requires Bun 1.4.2. GitHub CI runs on `ubuntu-24.04`. The project has no Node.js runtime dependency: Bun is used for development, tests, builds, and deployment. GitHub JavaScript Actions run on Node.js 24; Cloudflare's `nodejs_compat` is a Worker API compatibility flag, not a Node version pin.
 
 ```sh
 bun install
@@ -84,6 +84,8 @@ Configure this repository variable and secret before deployment:
 
 - `CLOUDFLARE_ACCOUNT_ID` (Actions variable)
 - `CLOUDFLARE_API_TOKEN` — narrowly scoped to the Cloudflare account and required Worker deployment operations.
+
+For the API token, grant **Account → Workers Scripts → Edit** on the target account, plus **Zone → Workers Routes → Edit** and **Zone → Zone → Read** for `mynameistito.com`. Cloudflare provisions the Custom Domain's DNS and certificate; Alchemy deployment does not need DNS Edit or Secrets Store Edit for this project. Use a Cloudflare API token, not the global API key.
 
 PR builds receive no Cloudflare credentials. Fork PRs do not receive privileged previews. Scheduled reconciliation cleans up previews whose PR-close event was missed.
 
