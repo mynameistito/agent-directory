@@ -3,10 +3,17 @@ pre-commit:
     - run: bun run fix {staged_files}
       glob:
         - "*.js"
+        - "**/*.js"
         - "*.jsx"
+        - "**/*.jsx"
         - "*.ts"
+        - "**/*.ts"
         - "*.tsx"
+        - "**/*.tsx"
         - "*.json"
+        - "**/*.json"
         - "*.jsonc"
+        - "**/*.jsonc"
         - "*.css"
+        - "**/*.css"
       stage_fixed: true
