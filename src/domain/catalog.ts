@@ -75,6 +75,11 @@ export const catalog: ProductCatalog = {
       id: "hcc-bin-day",
       interfaces: [
         {
+          endpoint: "https://bin-day.mynameistito.com/api/mcp",
+          transport: "streamable-http",
+          type: "mcp",
+        },
+        {
           baseUrl: "https://bin-day.mynameistito.com/api/lookup",
           documentationUrl: "https://bin-day.mynameistito.com/docs/",
           type: "rest",
@@ -89,7 +94,8 @@ export const catalog: ProductCatalog = {
       limitations: [
         "Unofficial and not affiliated with or endorsed by Hamilton City Council.",
         "Schedule data depends on the public Council API and can change or become unavailable.",
-        "This product does not currently expose an MCP or A2A endpoint.",
+        "The MCP endpoint only performs schedule lookups; it does not modify Council data.",
+        "This product does not expose an A2A endpoint.",
       ],
       name: "Hamilton Bin Day",
       repositoryUrl: "https://github.com/mynameistito/hcc-bin-day",

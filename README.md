@@ -40,7 +40,7 @@ Tool results include both readable JSON text and structured content. They descri
 ## Current entries
 
 - **mynameistito Agent Directory** — this MCP catalog and its JSON manifest.
-- **Hamilton Bin Day** — REST lookup API and `@mynameistito/hcc-bin-day` CLI. It is explicitly **not** described as an MCP or A2A service.
+- **Hamilton Bin Day** — REST lookup API, `@mynameistito/hcc-bin-day` CLI, and a read-only MCP lookup endpoint at `https://bin-day.mynameistito.com/api/mcp`. It is not described as an A2A service.
 
 Update `src/domain/catalog.ts` when adding products. Add only interfaces that exist and are publicly documented. Keep descriptions and limitations factual; a DNSSEC-signed DNS record or a publisher-controlled catalog is not a security audit or guarantee of an endpoint's behavior.
 

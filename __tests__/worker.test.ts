@@ -110,7 +110,7 @@ describe("directory Worker", () => {
         content: [
           {
             text: expect.stringContaining(
-              "This product does not currently expose an MCP or A2A endpoint."
+              "https://bin-day.mynameistito.com/api/mcp"
             ),
           },
         ],
