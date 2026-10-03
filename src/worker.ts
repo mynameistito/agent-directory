@@ -1,7 +1,9 @@
 import { catalog } from "./domain/catalog";
 import { handleMcpRequest } from "./mcp/server";
 
-const allowedOrigins = new Set(["https://agents.mynameistito.com"]);
+const agentDirectoryOrigin = "https://agents.mynameistito.com";
+const allowedMethods = "POST, OPTIONS";
+const allowedOrigins = new Set([agentDirectoryOrigin]);
 
 const jsonResponse = (body: string, status = 200): Response =>
   new Response(body, {
@@ -28,7 +30,7 @@ const handleMcp = async (request: Request): Promise<Response> => {
 
   if (request.method === "GET") {
     return new Response(null, {
-      headers: { allow: "POST, OPTIONS" },
+      headers: { allow: allowedMethods },
       status: 405,
     });
   }
@@ -38,8 +40,8 @@ const handleMcp = async (request: Request): Promise<Response> => {
       headers: {
         "access-control-allow-headers":
           "content-type, accept, mcp-session-id, mcp-protocol-version",
-        "access-control-allow-methods": "POST, OPTIONS",
-        "access-control-allow-origin": "https://agents.mynameistito.com",
+        "access-control-allow-methods": allowedMethods,
+        "access-control-allow-origin": agentDirectoryOrigin,
         vary: "origin",
       },
       status: 204,
@@ -48,7 +50,7 @@ const handleMcp = async (request: Request): Promise<Response> => {
 
   if (request.method !== "POST") {
     return new Response("Method not allowed", {
-      headers: { allow: "POST, OPTIONS" },
+      headers: { allow: allowedMethods },
       status: 405,
     });
   }
@@ -56,10 +58,7 @@ const handleMcp = async (request: Request): Promise<Response> => {
   try {
     const response = await handleMcpRequest(request);
     const headers = new Headers(response.headers);
-    headers.set(
-      "access-control-allow-origin",
-      "https://agents.mynameistito.com"
-    );
+    headers.set("access-control-allow-origin", agentDirectoryOrigin);
     headers.set("vary", "origin");
     headers.set("x-content-type-options", "nosniff");
     return new Response(response.body, {
@@ -92,7 +91,7 @@ const homepage = `<!doctype html>
         <li><a href="/.well-known/agent-index.json">Well-known agent index document</a></li>
       </ul>
       <h2>Connect over MCP</h2>
-      <p>Streamable HTTP endpoint: <code>https://agents.mynameistito.com/mcp</code></p>
+      <p>Streamable HTTP endpoint: <code>${agentDirectoryOrigin}/mcp</code></p>
       <p>Tools: <code>list_products</code>, <code>get_product</code>, <code>search_products</code>.</p>
       <p>Resources: <code>directory://manifest</code>, <code>directory://products/{id}</code>.</p>
       <p>Prompt: <code>choose_product_for_task</code>.</p>

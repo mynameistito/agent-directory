@@ -10,6 +10,15 @@ import { catalog, findProducts, getProduct } from "../domain/catalog";
 
 const protocolSchema = z.enum(["mcp", "rest", "cli"]);
 
+const listProducts = (protocol?: z.infer<typeof protocolSchema>) => {
+  const products = protocol
+    ? catalog.products.filter((product) =>
+        product.interfaces.some((item) => item.type === protocol)
+      )
+    : catalog.products;
+  return { count: products.length, products };
+};
+
 const textResult = (text: string) => ({
   content: [{ text, type: "text" as const }],
 });
@@ -42,14 +51,7 @@ const makeServer = (): McpServer => {
     },
     async ({ protocol }) => {
       const result = await Effect.runPromise(
-        Effect.sync(() => {
-          const products = protocol
-            ? catalog.products.filter((product) =>
-                product.interfaces.some((item) => item.type === protocol)
-              )
-            : catalog.products;
-          return { count: products.length, products };
-        })
+        Effect.sync(() => listProducts(protocol))
       );
       return textResult(JSON.stringify(result, null, 2));
     }
@@ -135,7 +137,11 @@ const makeServer = (): McpServer => {
 
   server.registerResource(
     "product-details",
-    new ResourceTemplate("directory://products/{id}", { list: undefined }),
+    new ResourceTemplate("directory://products/{id}", {
+      // The SDK requires an explicitly undefined callback when listing is unsupported.
+      // oxlint-disable-next-line sonarjs/no-undefined-assignment
+      list: undefined,
+    }),
     {
       description:
         "One product entry by stable ID, including its documented interfaces and limitations.",
