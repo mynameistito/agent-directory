@@ -1,19 +1,59 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    assignees:
+      - mynameistito
     labels:
       - github-actions
+    groups:
+      github-actions:
+        patterns:
+          - "*"
     cooldown:
-      default-days: 7
+      default-days: 0
 
   - package-ecosystem: bun
     directory: /
     schedule:
       interval: weekly
+    assignees:
+      - mynameistito
     labels:
       - deps
+    groups:
+      deps:
+        patterns:
+          - "@effect/platform-bun"
+          - "@effect/platform-node"
+          - "@modelcontextprotocol/sdk"
+          - alchemy
+          - effect
+          - zod
+        update-types:
+          - minor
+          - patch
+      dev-deps:
+        patterns:
+          - "@types/bun"
+          - "@types/node"
+          - "@typescript/native"
+          - eslint-plugin-github
+          - eslint-plugin-sonarjs
+          - knip
+          - lefthook
+          - oxfmt
+          - oxlint
+          - ultracite
+          - vitest
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: typescript
     cooldown:
       default-days: 7
