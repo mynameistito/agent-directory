@@ -67,6 +67,19 @@ export default Stack(
         type: "SVCB",
         zoneId: zone.zoneId,
       }).pipe(adopt(true));
+
+      yield* DNS.Record("HamiltonBinDayIndexDnsAid", {
+        comment: "DNS-AID index pointer for bin-day.mynameistito.com",
+        content: {
+          priority: 1,
+          target: "agents.mynameistito.com.",
+          value: 'alpn="h2,http/1.1" port="443"',
+        },
+        name: "_index._agents.bin-day.mynameistito.com",
+        ttl: 3600,
+        type: "SVCB",
+        zoneId: zone.zoneId,
+      }).pipe(adopt(true));
     }
 
     return { url: worker.url };
