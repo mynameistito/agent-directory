@@ -60,7 +60,13 @@ The directory is also published at the service hostname `agents.mynameistito.com
 _index._agents.agents.mynameistito.com. 3600 IN SVCB 1 agents.mynameistito.com. alpn="h2,http/1.1" port=443
 ```
 
-Both records are ServiceMode SVCB records and are covered by the DNSSEC-signed `mynameistito.com` zone. `alchemy.run.ts` declares the records and DNSSEC for the production stage. The existing records and zone are explicitly adopted so Alchemy can manage them without replacing them.
+The Hamilton Bin Day service is published at `bin-day.mynameistito.com`. Since discovery checks may use that service hostname as the organization domain, it also points to the central directory:
+
+```dns
+_index._agents.bin-day.mynameistito.com. 3600 IN SVCB 1 agents.mynameistito.com. alpn="h2,http/1.1" port=443
+```
+
+All three records are ServiceMode SVCB pointers to the central directory and are covered by the DNSSEC-signed `mynameistito.com` zone. `alchemy.run.ts` declares the pointers and DNSSEC for the production stage. Existing records and the zone are explicitly adopted so Alchemy can manage them without replacing them.
 
 ## Development
 

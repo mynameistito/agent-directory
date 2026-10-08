@@ -3,6 +3,9 @@ import { adopt } from "alchemy/AdoptPolicy";
 import { DNS, providers, state, Worker, Zone } from "alchemy/Cloudflare";
 import { gen } from "effect/Effect";
 
+const directoryTarget = "agents.mynameistito.com.";
+const directorySvcbValue = 'alpn="h2,http/1.1" port="443"';
+
 const workerProps = (stage: string) => {
   const base = {
     compatibility: {
@@ -46,8 +49,8 @@ export default Stack(
         comment: "DNS-AID organization index pointer",
         content: {
           priority: 1,
-          target: "agents.mynameistito.com.",
-          value: 'alpn="h2,http/1.1" port="443"',
+          target: directoryTarget,
+          value: directorySvcbValue,
         },
         name: "_index._agents.mynameistito.com",
         ttl: 3600,
@@ -59,10 +62,23 @@ export default Stack(
         comment: "DNS-AID index pointer for agents.mynameistito.com",
         content: {
           priority: 1,
-          target: "agents.mynameistito.com.",
-          value: 'alpn="h2,http/1.1" port="443"',
+          target: directoryTarget,
+          value: directorySvcbValue,
         },
         name: "_index._agents.agents.mynameistito.com",
+        ttl: 3600,
+        type: "SVCB",
+        zoneId: zone.zoneId,
+      }).pipe(adopt(true));
+
+      yield* DNS.Record("HamiltonBinDayIndexDnsAid", {
+        comment: "DNS-AID index pointer for bin-day.mynameistito.com",
+        content: {
+          priority: 1,
+          target: directoryTarget,
+          value: directorySvcbValue,
+        },
+        name: "_index._agents.bin-day.mynameistito.com",
         ttl: 3600,
         type: "SVCB",
         zoneId: zone.zoneId,
