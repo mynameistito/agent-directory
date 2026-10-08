@@ -1,5 +1,6 @@
 import { Stack } from "alchemy";
-import { providers, state, Worker } from "alchemy/Cloudflare";
+import { adopt } from "alchemy/AdoptPolicy";
+import { DNS, providers, state, Worker, Zone } from "alchemy/Cloudflare";
 import { gen } from "effect/Effect";
 
 const workerProps = (stage: string) => {
@@ -29,6 +30,45 @@ export default Stack(
   { providers: providers(), state: state() },
   gen(function* createStack() {
     const worker = yield* AgentDirectory;
+    const stack = yield* Stack;
+
+    if (stack.stage === "prod") {
+      const zone = yield* Zone.Zone("AgentDirectoryZone", {
+        name: "mynameistito.com",
+      }).pipe(adopt(true));
+
+      yield* DNS.Dnssec("AgentDirectoryDnssec", {
+        status: "active",
+        zoneId: zone.zoneId,
+      }).pipe(adopt(true));
+
+      yield* DNS.Record("OrganizationIndexDnsAid", {
+        comment: "DNS-AID organization index pointer",
+        content: {
+          priority: 1,
+          target: "agents.mynameistito.com.",
+          value: 'alpn="h2,http/1.1" port="443"',
+        },
+        name: "_index._agents.mynameistito.com",
+        ttl: 3600,
+        type: "SVCB",
+        zoneId: zone.zoneId,
+      }).pipe(adopt(true));
+
+      yield* DNS.Record("ServiceHostnameIndexDnsAid", {
+        comment: "DNS-AID index pointer for agents.mynameistito.com",
+        content: {
+          priority: 1,
+          target: "agents.mynameistito.com.",
+          value: 'alpn="h2,http/1.1" port="443"',
+        },
+        name: "_index._agents.agents.mynameistito.com",
+        ttl: 3600,
+        type: "SVCB",
+        zoneId: zone.zoneId,
+      }).pipe(adopt(true));
+    }
+
     return { url: worker.url };
   })
 );

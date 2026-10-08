@@ -46,13 +46,21 @@ Update `src/domain/catalog.ts` when adding products. Add only interfaces that ex
 
 ## DNS-AID
 
-DNS-AID is currently an Internet-Draft and its index document format is not standardized. The public DNS zone `mynameistito.com` is DNSSEC-signed. Once the production Worker is deployed, publish this organization-index entry:
+DNS-AID is currently an Internet-Draft and its index document format is not standardized. The public DNS zone `mynameistito.com` is DNSSEC-signed. This organization-index entry points to the production directory:
 
 ```dns
 _index._agents.mynameistito.com. 3600 IN SVCB 1 agents.mynameistito.com. alpn="h2,http/1.1" port=443
 ```
 
-This points discovery to the HTTPS organization directory; the MCP endpoint itself is `https://agents.mynameistito.com/mcp`. It advertises only HTTP transports (`h2` and `http/1.1`), not a draft-only `mcp` ALPN identifier or an invented experimental SvcParamKey. The record is managed in the Cloudflare zone, not inferred from the catalog. Publish it only after the production service is deployed and publicly reachable. Check the current [DNS-AID draft](https://datatracker.ietf.org/doc/draft-mozleywilliams-dnsop-dnsaid/) and [RFC 9460](https://www.rfc-editor.org/rfc/rfc9460) before changing experimental SVCB parameters.
+This points discovery to the HTTPS organization directory; the MCP endpoint itself is `https://agents.mynameistito.com/mcp`. It advertises only HTTP transports (`h2` and `http/1.1`), not a draft-only `mcp` ALPN identifier or an invented experimental SvcParamKey. Check the current [DNS-AID draft](https://datatracker.ietf.org/doc/draft-mozleywilliams-dnsop-dnsaid/) and [RFC 9460](https://www.rfc-editor.org/rfc/rfc9460) before changing experimental SVCB parameters.
+
+The directory is also published at the service hostname `agents.mynameistito.com`. DNS-AID scanners that treat that hostname as the organization domain query its own well-known owner name, so this second pointer is published as well:
+
+```dns
+_index._agents.agents.mynameistito.com. 3600 IN SVCB 1 agents.mynameistito.com. alpn="h2,http/1.1" port=443
+```
+
+Both records are ServiceMode SVCB records and are covered by the DNSSEC-signed `mynameistito.com` zone. `alchemy.run.ts` declares the records and DNSSEC for the production stage. The existing records and zone are explicitly adopted so Alchemy can manage them without replacing them.
 
 ## Development
 
@@ -85,7 +93,7 @@ Configure this repository variable and secret before deployment:
 - `CLOUDFLARE_ACCOUNT_ID` (Actions variable)
 - `CLOUDFLARE_API_TOKEN` — narrowly scoped to the Cloudflare account and required Worker deployment operations.
 
-For the API token, grant **Account → Workers Scripts → Edit** on the target account, plus **Zone → Workers Routes → Edit** and **Zone → Zone → Read** for `mynameistito.com`. Cloudflare provisions the Custom Domain's DNS and certificate; Alchemy deployment does not need DNS Edit or Secrets Store Edit for this project. Use a Cloudflare API token, not the global API key.
+For the API token, grant **Account → Workers Scripts → Edit** on the target account, plus **Zone → Workers Routes → Edit**, **Zone → DNS → Edit**, and **Zone → Zone → Read** for `mynameistito.com`. DNS Edit is needed for Alchemy to adopt and reconcile the SVCB records and DNSSEC state. Cloudflare provisions the Custom Domain's DNS and certificate. Use a Cloudflare API token, not the global API key.
 
 PR builds receive no Cloudflare credentials. Fork PRs do not receive privileged previews. Scheduled reconciliation cleans up previews whose PR-close event was missed.
 
