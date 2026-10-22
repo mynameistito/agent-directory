@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 
 import worker from "../src/worker";
+
+const productResponseSchema = z.object({
+  result: z.object({
+    content: z.array(z.object({ text: z.string() })),
+  }),
+});
 
 describe("directory Worker", () => {
   it("serves the machine-readable catalog at both public index paths", async () => {
@@ -108,7 +115,9 @@ describe("directory Worker", () => {
         ],
       },
     });
-    await expect(product.text()).resolves.toContain(
+    const productPayload = productResponseSchema.parse(await product.json());
+
+    expect(productPayload.result.content[0]?.text).toContain(
       "https://bin-day.mynameistito.com/api/mcp"
     );
   });
