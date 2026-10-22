@@ -1,12 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 
 import worker from "../src/worker";
+
+const productResponseSchema = z.object({
+  result: z.object({
+    content: z.array(z.object({ text: z.string() })),
+  }),
+});
 
 describe("directory Worker", () => {
   it("serves the machine-readable catalog at both public index paths", async () => {
     const catalogResponse = await worker.fetch(
       new Request("https://agents.example/catalog.json")
     );
+
     const wellKnownResponse = await worker.fetch(
       new Request("https://agents.example/.well-known/agent-index.json")
     );
@@ -59,6 +67,7 @@ describe("directory Worker", () => {
         method: "POST",
       })
     );
+
     const tools = await worker.fetch(
       new Request("https://agents.example/mcp", {
         body: JSON.stringify({
@@ -74,6 +83,7 @@ describe("directory Worker", () => {
         method: "POST",
       })
     );
+
     const product = await worker.fetch(
       new Request("https://agents.example/mcp", {
         body: JSON.stringify({
@@ -105,17 +115,11 @@ describe("directory Worker", () => {
         ],
       },
     });
-    await expect(product.json()).resolves.toMatchObject({
-      result: {
-        content: [
-          {
-            text: expect.stringContaining(
-              "https://bin-day.mynameistito.com/api/mcp"
-            ),
-          },
-        ],
-      },
-    });
+    const productPayload = productResponseSchema.parse(await product.json());
+
+    expect(productPayload.result.content[0]?.text).toContain(
+      "https://bin-day.mynameistito.com/api/mcp"
+    );
   });
 
   it("returns not found for unknown routes", async () => {

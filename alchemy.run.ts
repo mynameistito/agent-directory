@@ -23,6 +23,7 @@ const workerProps = (stage: string) => {
 };
 
 const resolveStackValue = Stack.useSync.bind(Stack);
+
 const AgentDirectory = Worker(
   "AgentDirectory",
   resolveStackValue((stack) => workerProps(stack.stage))
