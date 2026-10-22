@@ -111,7 +111,12 @@ export const catalog: ProductCatalog = {
   schemaVersion: "1",
 };
 
-/** Filter catalog products by free-text query and optional interface type. */
+/**
+ * Filter catalog products by free-text query and optional interface type.
+ * @param query - Free-text query to match against product details.
+ * @param protocol - Optional interface type to filter by.
+ * @returns Products matching the query and optional interface type.
+ */
 export const findProducts = (
   query: string,
   protocol?: ProductInterface["type"]
@@ -122,6 +127,7 @@ export const findProducts = (
     const matchesProtocol =
       protocol === undefined ||
       product.interfaces.some((item) => item.type === protocol);
+
     const searchableText = [
       product.id,
       product.name,
@@ -135,6 +141,10 @@ export const findProducts = (
   });
 };
 
-/** Find a catalog product by its stable ID. */
+/**
+ * Find a catalog product by its stable ID.
+ * @param id - Stable product identifier.
+ * @returns The matching product, if one exists.
+ */
 export const getProduct = (id: string): Product | undefined =>
   catalog.products.find((product) => product.id === id);

@@ -17,6 +17,7 @@ const jsonResponse = (body: string, status = 200): Response =>
 
 const isAllowedOrigin = (request: Request): boolean => {
   const origin = request.headers.get("origin");
+
   return origin === null || allowedOrigins.has(origin);
 };
 
@@ -61,6 +62,7 @@ const handleMcp = async (request: Request): Promise<Response> => {
     headers.set("access-control-allow-origin", agentDirectoryOrigin);
     headers.set("vary", "origin");
     headers.set("x-content-type-options", "nosniff");
+
     return new Response(response.body, {
       headers,
       status: response.status,
@@ -107,6 +109,7 @@ export default {
     if (url.pathname === "/mcp") {
       return await handleMcp(request);
     }
+
     if (request.method === "GET" && url.pathname === "/") {
       return new Response(homepage, {
         headers: {
@@ -118,6 +121,7 @@ export default {
         },
       });
     }
+
     if (
       request.method === "GET" &&
       (url.pathname === "/catalog.json" ||
@@ -125,6 +129,7 @@ export default {
     ) {
       return jsonResponse(JSON.stringify(catalog));
     }
+
     if (request.method === "GET" && url.pathname === "/health") {
       return jsonResponse(JSON.stringify({ status: "ok" }));
     }

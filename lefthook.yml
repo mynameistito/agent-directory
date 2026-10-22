@@ -1,5 +1,31 @@
 pre-commit:
   jobs:
+    - run: bunx ultracite fix {staged_files}
+      glob:
+        - "*.js"
+        - "*.jsx"
+        - "*.mjs"
+        - "*.cjs"
+        - "*.ts"
+        - "*.tsx"
+        - "*.mts"
+        - "*.cts"
+        - "*.json"
+        - "*.jsonc"
+        - "*.css"
+        - "*.scss"
+        - "*.less"
+        - "*.vue"
+        - "*.svelte"
+        - "*.astro"
+        - "*.html"
+        - "*.md"
+        - "*.mdx"
+        - "*.yaml"
+        - "*.yml"
+        - "*.graphql"
+        - "*.gql"
+      stage_fixed: true
     - run: bun run fix {files}
       files: git diff --cached --name-only --diff-filter=ACMRTUXB
       glob:

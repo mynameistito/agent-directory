@@ -16,6 +16,7 @@ const listProducts = (protocol?: z.infer<typeof protocolSchema>) => {
         product.interfaces.some((item) => item.type === protocol)
       )
     : catalog.products;
+
   return { count: products.length, products };
 };
 
@@ -53,6 +54,7 @@ const makeServer = (): McpServer => {
       const result = await Effect.runPromise(
         Effect.sync(() => listProducts(protocol))
       );
+
       return textResult(JSON.stringify(result, null, 2));
     }
   );
@@ -79,6 +81,7 @@ const makeServer = (): McpServer => {
       const result = await Effect.runPromise(
         Effect.sync(() => ({ product: getProduct(id) ?? null }))
       );
+
       return textResult(JSON.stringify(result, null, 2));
     }
   );
@@ -109,6 +112,7 @@ const makeServer = (): McpServer => {
       const products = await Effect.runPromise(
         Effect.sync(() => findProducts(query, protocol))
       );
+
       return textResult(
         JSON.stringify({ count: products.length, products }, null, 2)
       );
@@ -148,10 +152,21 @@ const makeServer = (): McpServer => {
       mimeType: "application/json",
       title: "Product details",
     },
+    /**
+     * Return one product resource by its stable ID.
+     * @param uri - Requested resource URI.
+     * @param variables - Template variables from the resource request.
+     * @returns The product resource contents or a not-found response.
+     */
     (uri, variables) => {
       const { id } = variables;
       const productId = Array.isArray(id) ? id[0] : id;
-      const product = productId ? getProduct(productId) : undefined;
+
+      const product =
+        productId !== undefined && productId.length > 0
+          ? getProduct(productId)
+          : undefined;
+
       return {
         contents: [
           {
@@ -199,14 +214,20 @@ const makeServer = (): McpServer => {
   return server;
 };
 
-/** Handle one stateless Streamable HTTP MCP request. */
+/**
+ * Handle one stateless Streamable HTTP MCP request.
+ * @param request - Incoming MCP Streamable HTTP request.
+ * @returns The MCP response.
+ */
 export const handleMcpRequest = async (request: Request): Promise<Response> => {
   const server = makeServer();
+
   const transport = new WebStandardStreamableHTTPServerTransport({
     enableJsonResponse: true,
   });
 
   await server.connect(transport);
+
   try {
     return await transport.handleRequest(request);
   } finally {

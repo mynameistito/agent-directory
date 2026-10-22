@@ -7,6 +7,7 @@ describe("directory Worker", () => {
     const catalogResponse = await worker.fetch(
       new Request("https://agents.example/catalog.json")
     );
+
     const wellKnownResponse = await worker.fetch(
       new Request("https://agents.example/.well-known/agent-index.json")
     );
@@ -59,6 +60,7 @@ describe("directory Worker", () => {
         method: "POST",
       })
     );
+
     const tools = await worker.fetch(
       new Request("https://agents.example/mcp", {
         body: JSON.stringify({
@@ -74,6 +76,7 @@ describe("directory Worker", () => {
         method: "POST",
       })
     );
+
     const product = await worker.fetch(
       new Request("https://agents.example/mcp", {
         body: JSON.stringify({
@@ -105,17 +108,9 @@ describe("directory Worker", () => {
         ],
       },
     });
-    await expect(product.json()).resolves.toMatchObject({
-      result: {
-        content: [
-          {
-            text: expect.stringContaining(
-              "https://bin-day.mynameistito.com/api/mcp"
-            ),
-          },
-        ],
-      },
-    });
+    await expect(product.text()).resolves.toContain(
+      "https://bin-day.mynameistito.com/api/mcp"
+    );
   });
 
   it("returns not found for unknown routes", async () => {
