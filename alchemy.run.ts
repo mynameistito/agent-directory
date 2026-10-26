@@ -1,6 +1,6 @@
+import { DNS, providers, state, Worker, Zone } from "@alchemy.run/cloudflare";
 import { Stack } from "alchemy";
 import { adopt } from "alchemy/AdoptPolicy";
-import { DNS, providers, state, Worker, Zone } from "alchemy/Cloudflare";
 import { gen } from "effect/Effect";
 
 const directoryTarget = "agents.mynameistito.com.";
