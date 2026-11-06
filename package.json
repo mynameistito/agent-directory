@@ -18,11 +18,11 @@
   },
   "dependencies": {
     "@alchemy.run/cloudflare": "2.0.0-beta.84",
-    "@effect/platform-bun": "4.1.0",
-    "@effect/platform-node": "4.1.0",
+    "@effect/platform-bun": "4.0.7",
+    "@effect/platform-node": "4.0.7",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "alchemy": "2.0.0-beta.84",
-    "effect": "4.1.0",
+    "effect": "4.0.7",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -40,6 +40,10 @@
     "tsrs": "0.20.1-ts7.1.0-beta",
     "ultracite": "8.1.0",
     "vitest": "5.0.5"
+  },
+  "overrides": {
+    "@effect/platform-node-shared": "4.0.7",
+    "@effect/sql-d1": "4.0.7"
   },
   "packageManager": "bun@1.4.4"
 }

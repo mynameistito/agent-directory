@@ -81,6 +81,8 @@ bun run test
 bun run build
 ```
 
+Alchemy beta.84 imports `effect/Crypto`, which Effect 4.1 removed. Keep Effect and its platform packages on 4.0.7 until Alchemy supports a newer version. The two package overrides align transitive Effect packages with that runtime; remove them when the Alchemy upgrade is verified.
+
 Alchemy owns Cloudflare Worker deployment and state:
 
 ```sh
