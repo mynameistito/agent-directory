@@ -70,7 +70,7 @@ All three records are ServiceMode SVCB pointers to the central directory and are
 
 ## Development
 
-Requires Bun 1.4.2. GitHub CI runs on `ubuntu-24.04`. The project has no Node.js runtime dependency: Bun is used for development, tests, builds, and deployment. GitHub JavaScript Actions run on Node.js 24; Cloudflare's `nodejs_compat` is a Worker API compatibility flag, not a Node version pin.
+Requires Bun 1.4.4. GitHub CI runs on `ubuntu-24.04`. The project has no Node.js runtime dependency: Bun is used for development, tests, builds, and deployment. GitHub JavaScript Actions run on Node.js 24; Cloudflare's `nodejs_compat` is a Worker API compatibility flag, not a Node version pin.
 
 ```sh
 bun install
