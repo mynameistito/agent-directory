@@ -70,7 +70,7 @@ All three records are ServiceMode SVCB pointers to the central directory and are
 
 ## Development
 
-Requires Bun 1.4.2. GitHub CI runs on `ubuntu-24.04`. The project has no Node.js runtime dependency: Bun is used for development, tests, builds, and deployment. GitHub JavaScript Actions run on Node.js 24; Cloudflare's `nodejs_compat` is a Worker API compatibility flag, not a Node version pin.
+Requires Bun 1.4.4. GitHub CI runs on `ubuntu-24.04`. The project has no Node.js runtime dependency: Bun is used for development, tests, builds, and deployment. GitHub JavaScript Actions run on Node.js 24; Cloudflare's `nodejs_compat` is a Worker API compatibility flag, not a Node version pin.
 
 ```sh
 bun install
@@ -80,6 +80,10 @@ bun run typecheck
 bun run test
 bun run build
 ```
+
+Alchemy beta.85 and Effect 4.1.2 are coordinated with the deployment action's v8 state API. Upgrade all clients sharing a state store before enabling deployments; do not point the v8 action at a v7 backend.
+
+The Workers types override selects the earliest version required by Effect SQL D1 while the coordinated runtime update is inside the seven-day release-age window. Revisit it after the window expires.
 
 Alchemy owns Cloudflare Worker deployment and state:
 
@@ -92,7 +96,7 @@ Preview stages omit the production custom domain. The production stage binds `ag
 
 ## GitHub deployment
 
-`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v3.1.3 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted reusable action.
+`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v4.0.0 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted action.
 
 Configure this repository variable and secret before deployment:
 

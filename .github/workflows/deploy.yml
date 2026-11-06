@@ -37,9 +37,26 @@ jobs:
             echo "::notice::Skipping Cloudflare deployment because repository secrets are not configured."
           fi
 
+      - name: Check current pull request state before cleanup
+        if: steps.credentials.outputs.available == 'true' && github.event_name == 'pull_request_target'
+        id: cleanup_state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          state=$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER" --jq .state)
+          case "$state" in
+            closed) echo "closed=true" >> "$GITHUB_OUTPUT" ;;
+            open) echo "closed=false" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::Unexpected pull request state"; exit 1 ;;
+          esac
+
+      # A reopen can still race this check; the action must recheck at destruction.
       - name: Run trusted Alchemy deployment
-        if: steps.credentials.outputs.available == 'true'
-        uses: mynameistito/alchemy-deploy@4e29a36d61cf8cc4277bdcd35d7b3eff13150b38 # v3.2.0
+        if: >-
+          steps.credentials.outputs.available == 'true' && (github.event_name == 'workflow_run' || steps.cleanup_state.outputs.closed == 'true')
+        uses: mynameistito/alchemy-deploy@0db293d18c4d6d99926cd74488f7eb6a26aa73bc # v4.0.0
         with:
           worker-name: agent-directory
           deploy-command: bunx --no-install alchemy deploy --stage "$STAGE" --yes
@@ -50,12 +67,15 @@ jobs:
           preview-artifact: alchemy-worker
           preview-entrypoint: worker/index.js
           preview-compatibility-date: "2026-10-03"
+          preview-compatibility-flags: '["nodejs_compat"]'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   reconcile:
+    # The action rechecks each PR, but its sweep does not share per-PR concurrency
+    # or atomically couple that check to destruction; an upstream fix is needed.
     if: github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     permissions:
@@ -79,7 +99,7 @@ jobs:
 
       - name: Reconcile closed pull request previews
         if: steps.credentials.outputs.available == 'true'
-        uses: mynameistito/alchemy-deploy@4e29a36d61cf8cc4277bdcd35d7b3eff13150b38 # v3.2.0
+        uses: mynameistito/alchemy-deploy@0db293d18c4d6d99926cd74488f7eb6a26aa73bc # v4.0.0
         with:
           worker-name: agent-directory
           deploy-command: bunx --no-install alchemy deploy --stage "$STAGE" --yes
