@@ -67,6 +67,7 @@ jobs:
           preview-artifact: alchemy-worker
           preview-entrypoint: worker/index.js
           preview-compatibility-date: "2026-10-03"
+          preview-compatibility-flags: '["nodejs_compat"]'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

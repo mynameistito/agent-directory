@@ -94,7 +94,7 @@ Preview stages omit the production custom domain. The production stage binds `ag
 
 ## GitHub deployment
 
-`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v3.1.3 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted reusable action.
+`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v3.2.0 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted action.
 
 Configure this repository variable and secret before deployment:
 
