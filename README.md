@@ -81,7 +81,9 @@ bun run test
 bun run build
 ```
 
-Alchemy beta.84 imports `effect/Crypto`, which Effect 4.1 removed. Keep Effect and its platform packages on 4.0.7 until Alchemy supports a newer version. The two package overrides align transitive Effect packages with that runtime; remove them when the Alchemy upgrade is verified.
+Alchemy beta.85 and Effect 4.1.2 are coordinated with the deployment action's v8 state API. Upgrade all clients sharing a state store before enabling deployments; do not point the v8 action at a v7 backend.
+
+The Workers types override selects the earliest version required by Effect SQL D1 while the coordinated runtime update is inside the seven-day release-age window. Revisit it after the window expires.
 
 Alchemy owns Cloudflare Worker deployment and state:
 
@@ -94,7 +96,7 @@ Preview stages omit the production custom domain. The production stage binds `ag
 
 ## GitHub deployment
 
-`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v3.2.0 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted action.
+`.github/workflows/deploy.yml` uses [`mynameistito/alchemy-deploy`](https://github.com/mynameistito/alchemy-deploy), pinned to the immutable v4.0.0 commit. The `CI` workflow builds and uploads a credential-free Worker artifact; production deploy and PR previews are performed by the trusted action.
 
 Configure this repository variable and secret before deployment:
 
