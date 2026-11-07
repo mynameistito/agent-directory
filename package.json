@@ -18,11 +18,11 @@
   },
   "dependencies": {
     "@alchemy.run/cloudflare": "2.0.0-beta.84",
-    "@effect/platform-bun": "4.0.6",
-    "@effect/platform-node": "4.0.6",
-    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@effect/platform-bun": "4.1.1",
+    "@effect/platform-node": "4.1.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "alchemy": "2.0.0-beta.84",
-    "effect": "4.0.6",
+    "effect": "4.1.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
