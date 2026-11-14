@@ -17,7 +17,7 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
-    "@alchemy.run/cloudflare": "2.0.0-beta.84",
+    "@alchemy.run/cloudflare": "2.0.0-beta.85",
     "@effect/platform-bun": "4.0.6",
     "@effect/platform-node": "4.0.6",
     "@modelcontextprotocol/sdk": "^1.32.1",
