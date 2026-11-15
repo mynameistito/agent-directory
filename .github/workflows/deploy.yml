@@ -39,7 +39,7 @@ jobs:
 
       - name: Run trusted Alchemy deployment
         if: steps.credentials.outputs.available == 'true'
-        uses: mynameistito/alchemy-deploy@4e29a36d61cf8cc4277bdcd35d7b3eff13150b38 # v3.2.0
+        uses: mynameistito/alchemy-deploy@cfc5ad68e85a994a822a4812e54657e75b80172d # v4.0.1
         with:
           worker-name: agent-directory
           deploy-command: bunx --no-install alchemy deploy --stage "$STAGE" --yes
@@ -79,7 +79,7 @@ jobs:
 
       - name: Reconcile closed pull request previews
         if: steps.credentials.outputs.available == 'true'
-        uses: mynameistito/alchemy-deploy@4e29a36d61cf8cc4277bdcd35d7b3eff13150b38 # v3.2.0
+        uses: mynameistito/alchemy-deploy@cfc5ad68e85a994a822a4812e54657e75b80172d # v4.0.1
         with:
           worker-name: agent-directory
           deploy-command: bunx --no-install alchemy deploy --stage "$STAGE" --yes
